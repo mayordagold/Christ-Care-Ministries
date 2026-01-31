@@ -1,9 +1,9 @@
 import os
 from flask import Flask, redirect, url_for
 from flask_wtf import CSRFProtect
+from flask_login import LoginManager
 
 from models import init_db, create_user, close_db, load_user, get_db
-from flask_login import LoginManager
 
 # Import Blueprints
 from routes.auth import auth
@@ -12,7 +12,7 @@ from routes.expenses import expenses_bp
 from routes.admin import admin_bp
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY") or '1dcff5cbd4750241a26442397a3095bdc526c6cada38a1d1958d26884b3af570'
+app.secret_key = os.environ.get("SECRET_KEY") or 'fallback_secret_key'
 
 # Security-related config
 app.config.update(
@@ -36,6 +36,7 @@ login_manager.init_app(app)
 def _load_user(user_id):
     return load_user(user_id)
 
+
 # Register Blueprints
 app.register_blueprint(auth)
 app.register_blueprint(dashboard)
@@ -48,50 +49,49 @@ app.teardown_appcontext(close_db)
 # Initialize database
 init_db()
 
-# -----------------------
-# Seed default users (run only if DB is empty) inside an app context
-# -----------------------
 
+# -----------------------
+# Idempotent default user seeding
+# -----------------------
 def seed_default_users():
-    db = get_db()
     created = []
-    try:
-        def ensure(name, email, password, role):
-            exists = db.execute("SELECT 1 FROM users WHERE email=?", (email,)).fetchone()
-            if not exists:
-                create_user(name, email, password, role)
-                created.append(email)
 
-        # Always ensure an admin exists
-        ensure("Admin", "admin@church.com", "password123", "admin")
+    defaults = [
+        ("Admin", "admin@church.com", "password123", "admin"),
+        ("John Usher", "usher@church.com", "password123", "usher"),
+        ("Mary Finance", "finance@church.com", "password123", "finance"),
+        ("Pastor Paul", "pastor@church.com", "password123", "pastor")
+    ]
 
-        # If DB is empty, seed other defaults as well
-        user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-        if user_count == 0:
-            ensure("John Usher", "usher@church.com", "password123", "usher")
-            ensure("Mary Finance", "finance@church.com", "password123", "finance")
-            ensure("Pastor Paul", "pastor@church.com", "password123", "pastor")
-    finally:
-        db.close()
+    for name, email, password, role in defaults:
+        from models import get_user_by_email, create_user
+        if not get_user_by_email(email):
+            create_user(name, email, password, role)
+            created.append(email)
 
     if created:
         print(f"Created default users: {', '.join(created)}")
+    else:
+        print("All default users already exist.")
+
+
 
 @app.route("/")
 def home():
     return redirect(url_for("auth.login"))
+
 
 if __name__ == "__main__":
     debug_mode = os.environ.get("DEBUG", "True") == "True"
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 10000))
 
-    # Ensure DB seeding happens within an application context at startup
+    # Ensure DB seeding happens inside app context at startup
     with app.app_context():
         try:
             seed_default_users()
         except Exception as e:
-            # Log the error but don't prevent the app from starting
+            # Log error but don't prevent app from starting
             print(f"Seed skipped due to error: {e}")
 
     app.run(host=host, port=port, debug=debug_mode)

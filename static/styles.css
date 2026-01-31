@@ -213,3 +213,41 @@ body{
 	.login-card{ padding:20px; border-radius:10px; }
 	.login-logo{ max-width:120px; }
 }
+/* ==========================
+   Mobile-friendly adjustments
+   ========================== */
+@media (max-width: 576px) {
+    /* Make all buttons slightly larger on mobile */
+    .btn, .btn-primary, .btn-accent, .btn-login, .btn-logout, .btn-csv-green, .btn-approve-blue, .btn-delete {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.9rem;
+    }
+
+    /* Navbar tweaks */
+    .navbar-nav {
+        text-align: center;
+    }
+    .navbar-nav .nav-item {
+        margin-bottom: 6px;
+    }
+
+    /* Dashboard cards: make fonts bigger and content easier to tap */
+    .card .card-title { font-size: 1.1rem; }
+    .card .card-text { font-size: 0.95rem; }
+
+    /* Forms: increase input height and font-size */
+    .form-control {
+        font-size: 0.95rem;
+        padding: 0.45rem 0.75rem;
+    }
+
+    /* Tables: increase padding inside cells */
+    .table th, .table td {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Login page tweaks */
+    .login-card { padding: 24px 20px; }
+    .login-logo { max-width: 140px; }
+}

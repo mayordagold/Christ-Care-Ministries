@@ -8,10 +8,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     {% block head %}{% endblock %}
     <style>
-        .container { max-width: 1100px; margin: 24px auto; padding: 0 12px; }
-        .flash-list { list-style:none; padding:0; }
-        .flash-list li { margin:6px 0; }
-    </style>
+    /* Make container fully responsive on small screens */
+    .container {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 12px;
+        width: 100%;
+    }
+
+    /* Flash messages spacing */
+    .flash-list { list-style: none; padding: 0; }
+    .flash-list li { margin: 6px 0; }
+
+    /* Improve button sizes for mobile */
+    @media (max-width: 576px) {
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.45rem 0.75rem;
+        }
+
+        .navbar-nav {
+            text-align: center;
+        }
+    }
+</style>
+
 </head>
 <body>
     {% macro render_errors(field) %}

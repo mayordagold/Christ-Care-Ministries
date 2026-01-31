@@ -13,7 +13,7 @@ from routes.expenses import expenses_bp
 from routes.admin import admin_bp
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24).hex()
+app.secret_key = os.environ.get("SECRET_KEY") or '1dcff5cbd4750241a26442397a3095bdc526c6cada38a1d1958d26884b3af570'
 
 # Security-related config
 app.config.update(
@@ -63,6 +63,6 @@ def home():
 
 if __name__ == "__main__":
     debug_mode = os.environ.get("DEBUG", "True") == "True"
-    host = os.environ.get("HOST", "127.0.0.1")
+    host = os.environ.get("HOST", "0.0.0.0")  # For Render deployment
     port = int(os.environ.get("PORT", 5000))
     app.run(host=host, port=port, debug=debug_mode)

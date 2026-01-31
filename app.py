@@ -2,9 +2,8 @@ import os
 from flask import Flask, redirect, url_for
 from flask_wtf import CSRFProtect
 
-from models import init_db, create_user, close_db, load_user
+from models import init_db, create_user, close_db, load_user, get_db
 from flask_login import LoginManager
-
 
 # Import Blueprints
 from routes.auth import auth
@@ -50,12 +49,17 @@ app.teardown_appcontext(close_db)
 init_db()
 
 # -----------------------
-# Seed default users (run once)
+# Seed default users (run only if DB is empty)
 # -----------------------
-# Uncomment these lines the first time you run to create users
-# create_user("John Usher", "usher@church.com", "password123", "usher")
-# create_user("Mary Finance", "finance@church.com", "password123", "finance")
-# create_user("Pastor Paul", "pastor@church.com", "password123", "pastor")
+db = get_db()
+user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+db.close()
+
+if user_count == 0:
+    create_user("John Usher", "usher@church.com", "password123", "usher")
+    create_user("Mary Finance", "finance@church.com", "password123", "finance")
+    create_user("Pastor Paul", "pastor@church.com", "password123", "pastor")
+    print("Default users created: Usher, Finance, Pastor")
 
 @app.route("/")
 def home():

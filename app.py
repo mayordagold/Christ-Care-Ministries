@@ -49,17 +49,21 @@ app.teardown_appcontext(close_db)
 init_db()
 
 # -----------------------
-# Seed default users (run only if DB is empty)
+# Seed default users (run only if DB is empty) inside an app context
 # -----------------------
-db = get_db()
-user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-db.close()
 
-if user_count == 0:
-    create_user("John Usher", "usher@church.com", "password123", "usher")
-    create_user("Mary Finance", "finance@church.com", "password123", "finance")
-    create_user("Pastor Paul", "pastor@church.com", "password123", "pastor")
-    print("Default users created: Usher, Finance, Pastor")
+def seed_default_users():
+    db = get_db()
+    try:
+        user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    finally:
+        db.close()
+
+    if user_count == 0:
+        create_user("John Usher", "usher@church.com", "password123", "usher")
+        create_user("Mary Finance", "finance@church.com", "password123", "finance")
+        create_user("Pastor Paul", "pastor@church.com", "password123", "pastor")
+        print("Default users created: Usher, Finance, Pastor")
 
 @app.route("/")
 def home():
@@ -67,6 +71,15 @@ def home():
 
 if __name__ == "__main__":
     debug_mode = os.environ.get("DEBUG", "True") == "True"
-    host = os.environ.get("HOST", "0.0.0.0")  # For Render deployment
-    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", 10000))
+
+    # Ensure DB seeding happens within an application context at startup
+    with app.app_context():
+        try:
+            seed_default_users()
+        except Exception as e:
+            # Log the error but don't prevent the app from starting
+            print(f"Seed skipped due to error: {e}")
+
     app.run(host=host, port=port, debug=debug_mode)

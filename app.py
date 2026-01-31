@@ -54,16 +54,28 @@ init_db()
 
 def seed_default_users():
     db = get_db()
+    created = []
     try:
+        def ensure(name, email, password, role):
+            exists = db.execute("SELECT 1 FROM users WHERE email=?", (email,)).fetchone()
+            if not exists:
+                create_user(name, email, password, role)
+                created.append(email)
+
+        # Always ensure an admin exists
+        ensure("Admin", "admin@church.com", "password123", "admin")
+
+        # If DB is empty, seed other defaults as well
         user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+        if user_count == 0:
+            ensure("John Usher", "usher@church.com", "password123", "usher")
+            ensure("Mary Finance", "finance@church.com", "password123", "finance")
+            ensure("Pastor Paul", "pastor@church.com", "password123", "pastor")
     finally:
         db.close()
 
-    if user_count == 0:
-        create_user("John Usher", "usher@church.com", "password123", "usher")
-        create_user("Mary Finance", "finance@church.com", "password123", "finance")
-        create_user("Pastor Paul", "pastor@church.com", "password123", "pastor")
-        print("Default users created: Usher, Finance, Pastor")
+    if created:
+        print(f"Created default users: {', '.join(created)}")
 
 @app.route("/")
 def home():

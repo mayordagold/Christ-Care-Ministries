@@ -1,0 +1,215 @@
+/* Custom vivid green for CSV button */
+.btn-csv-green {
+	background: linear-gradient(180deg, #28a745, #218838) !important;
+	color: #fff !important;
+	border: none;
+}
+.btn-csv-green:hover, .btn-csv-green:focus {
+	background: linear-gradient(180deg, #218838, #28a745) !important;
+	color: #fff !important;
+}
+/* Approve Expense Blue Button */
+.btn-approve-blue {
+	background: linear-gradient(180deg, #23408e, #3b6ed6) !important;
+	color: #fff !important;
+	border: none;
+}
+.btn-approve-blue:hover, .btn-approve-blue:focus {
+	background: linear-gradient(180deg, #3b6ed6, #23408e) !important;
+	color: #fff !important;
+}
+/* Custom vivid red for delete button */
+.btn-delete {
+	background-color: #d90429 !important;
+	color: #fff !important;
+	border: none;
+}
+.btn-delete:hover, .btn-delete:focus {
+	background-color: #a8001c !important;
+	color: #fff !important;
+}
+/* Dashboard card color styles remain, sizing tweaks removed for default Bootstrap size */
+/* Unique card color styles for dashboard */
+.card-attendance {
+	background: linear-gradient(135deg, #e3f0ff 0%, #b3d8fd 100%);
+	border-left: 6px solid #23408e;
+}
+.card-giving {
+	background: linear-gradient(135deg, #fffbe6 0%, #ffe066 100%);
+	border-left: 6px solid #ffd700;
+}
+.card-expenses {
+	background: linear-gradient(135deg, #fff0f0 0%, #ffd6d6 100%);
+	border-left: 6px solid #e04b4f;
+}
+.card-reports {
+	background: linear-gradient(135deg, #f0f7f4 0%, #b7e4c7 100%);
+	border-left: 6px solid #36b37e;
+}
+/* Attractive table styles for giving and expenses */
+.giving-table th, .giving-table td {
+	background: #f8fafc;
+	border-color: #ffd700 !important;
+}
+.giving-table th {
+	background: #23408e;
+	color: #fff;
+	font-weight: 600;
+}
+.giving-table tr:hover td {
+	background: #e6eef0;
+}
+
+.expenses-table th, .expenses-table td {
+	background: #fffbe6;
+	border-color: #ffd700 !important;
+}
+.expenses-table th {
+	background: #ffd700;
+	color: #23408e;
+	font-weight: 600;
+}
+.expenses-table tr:hover td {
+	background: #fff3cd;
+}
+
+:root{
+  --brand: #23408e; /* deep blue */
+  --brand-dark: #182a5c;
+  --accent: #ffd700; /* gold */
+  --muted: #6b7280;
+  --bg: #f8fafc;
+  --card-bg: #fff;
+  --border: #e6eef0;
+}
+
+html,body{height:100%;}
+body{
+	font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	background: var(--bg);
+	color: #0f172a;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+}
+
+.container{ background: var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:22px; box-shadow: 0 6px 18px rgba(11,114,133,0.06); }
+
+/* Navbar tweaks */
+.navbar-brand{ font-weight:700; color:var(--brand) !important; letter-spacing:1px; }
+.navbar{ box-shadow:none; border:1px solid var(--border); }
+
+/* Buttons */
+.btn-primary{ background:linear-gradient(180deg,var(--brand),var(--brand-dark)) !important; border: none; color:#fff !important; }
+.btn-primary:hover{ background:linear-gradient(180deg,var(--brand-dark),#182a5c) !important; color:#fff !important; }
+.btn-accent{ background:var(--accent) !important; color:#23408e !important; border:none; }
+.btn-accent:hover{ background:#ffe066 !important; color:#182a5c !important; }
+/* Login / Logout specific buttons */
+.btn-login{ background: linear-gradient(180deg,#36b37e,#2fa46b) !important; border: none; color: #fff !important; }
+.btn-login:hover{ background: linear-gradient(180deg,#2fa46b,#238a54) !important; }
+.btn-logout{ background: linear-gradient(180deg,#ff5c60,#e04b4f) !important; border: none; color: #fff !important; }
+.btn-logout:hover{ background: linear-gradient(180deg,#e04b4f,#c83a3f) !important; }
+.btn, .btn-primary, .btn-login, .btn-logout { color: #fff !important; }
+
+/* Ensure .btn-secondary is visible on light backgrounds */
+.btn-secondary {
+	background: #e2e6ea !important;
+	color: #23408e !important;
+	border: none;
+}
+.btn-secondary:hover {
+	background: #cfd8dc !important;
+	color: #182a5c !important;
+}
+
+/* Cards */
+.card{ border-radius:10px; border:1px solid var(--border); }
+.card-title{ color:var(--brand-dark); font-weight:600; letter-spacing:0.5px; }
+.card-text{ color:var(--muted); }
+
+/* Forms */
+.form-label{ font-weight:600; color:var(--brand-dark); }
+.form-control{ border-radius:6px; border:1px solid var(--border); }
+.form-control:focus{ box-shadow:0 0 0 0.15rem rgba(11,114,133,0.12); border-color:var(--brand); }
+
+/* Tables */
+.table thead th{ background: linear-gradient(90deg, rgba(35,64,142,0.08), rgba(35,64,142,0.01)); color:var(--brand-dark); border-bottom:2px solid var(--border); }
+.table td, .table th{ vertical-align:middle; }
+
+/* Flash messages */
+.alert-danger{ background:#fff5f5; border-color:#fed7d7; color:#9b2c2c; }
+.alert-success{ background:#f8fff4; border-color:#ffe066; color:#23408e; }
+
+/* Small helpers */
+.small.text-muted{ color:var(--muted) !important; }
+
+/* Inputs width */
+.form-control[ type='number' ]{ max-width:140px; }
+
+/* Responsive tweaks */
+@media (max-width:576px){
+	.container{ padding:16px; border-radius:6px; }
+}
+
+/* Enhanced table styling */
+.table {
+	border-collapse: separate;
+	border-spacing: 0;
+	background: white;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	overflow: hidden;
+}
+.table thead th {
+	background: linear-gradient(90deg, rgba(11,114,133,0.06), rgba(11,114,133,0.02));
+	color: var(--brand-dark);
+	border-bottom: 2px solid rgba(11,114,133,0.06);
+	font-weight:600;
+	padding: 12px 16px;
+	text-align: left;
+}
+.table tbody td {
+	padding: 10px 16px;
+	border-top: 1px solid #f1f6f7;
+}
+.table.table-sm thead th { padding: 8px 12px; }
+.table.table-sm tbody td { padding: 6px 12px; }
+.table-hover tbody tr:hover { background: #fbffff; }
+.table-striped tbody tr:nth-of-type(odd){ background: #fcfeff; }
+.table-bordered { border: none; }
+.table-responsive{ overflow:auto; -webkit-overflow-scrolling:touch; }
+.table .text-muted{ color:var(--muted); }
+
+/* Make table headers slightly sticky when inside a .table-responsive container */
+.table-responsive thead th{ position: sticky; top: 0; z-index: 3; }
+
+/* Small visual polish for empty table states */
+.empty-table{ text-align:center; padding:24px; color:var(--muted); }
+
+/* Login logo */
+.login-logo{ max-width:160px; height:auto; display:block; margin:0 auto; border-radius:8px; box-shadow:0 6px 18px rgba(35,64,142,0.08); background:#fff; }
+
+/* Login page hero and card */
+.login-hero{
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	padding:48px 12px;
+	background: linear-gradient(180deg, #f8fafc 60%, #23408e 100%);
+	background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 10px, transparent 10px 20px), radial-gradient(circle at 10% 20%, rgba(255,215,0,0.08), transparent 25%), linear-gradient(135deg, rgba(35,64,142,0.04), rgba(35,64,142,0.01));
+}
+.login-card{
+	width:100%;
+	max-width:460px;
+	background: linear-gradient(180deg, #fff 90%, #f8fafc 100%);
+	border-radius:14px;
+	padding:28px 26px;
+	box-shadow: 0 10px 30px rgba(35,64,142,0.10);
+	border:1px solid rgba(35,64,142,0.06);
+}
+.login-card .form-control{ background: #fff; }
+.login-card h2{ margin-bottom:6px; color:var(--brand-dark); }
+
+@media (max-width:576px){
+	.login-card{ padding:20px; border-radius:10px; }
+	.login-logo{ max-width:120px; }
+}

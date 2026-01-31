@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Approve Expenses - Christ Care Ministries{% endblock %}
+
+{% block content %}
+  <h2>Approve Expenses</h2>
+  <p>Welcome {{ current_user.name }} ({{ current_user.role }})</p>
+  <a href="{{ url_for('dashboard.view_dashboard') }}">Back to Dashboard</a>
+
+  {% if message %}
+      <p style="color:green;">{{ message }}</p>
+  {% endif %}
+
+  {% if balance_data %}
+    <h4>Per-Service Financial Balance</h4>
+    <div class="table-responsive mb-4">
+      <table class="table table-bordered table-striped table-hover table-sm align-middle shadow-sm">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Service Type</th>
+            <th>Total Giving</th>
+            <th>Approved Expenses</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in balance_data %}
+          <tr>
+            <td>{{ b.date }}</td>
+            <td>{{ b.service_type }}</td>
+            <td>{{ '{:,.2f}'.format(b.total_giving) }}</td>
+            <td>{{ '{:,.2f}'.format(b.total_expenses) }}</td>
+            <td><strong>{{ '{:,.2f}'.format(b.balance) }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+  {% if expenses %}
+    <div class="table-responsive">
+    <table class="table table-striped table-hover table-sm align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Service</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Payment</th>
+          <th>Description</th>
+          <th>Paid By</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in expenses %}
+        <tr>
+          <td>{{ e[0] }}</td>
+          <td>{{ e[1] }}</td>
+          <td>{{ e[2] }}</td>
+          <td>{{ e[3] }}</td>
+          <td>{{ e[4] }}</td>
+          <td>{{ e[5] }}</td>
+          <td>{{ e[6] }}</td>
+          <td>{{ e[7] }}</td>
+          <td>
+            <form method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <input type="hidden" name="expense_id" value="{{ e[0] }}" />
+              <button type="submit" class="btn btn-sm btn-success">Approve</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  {% else %}
+    <div class="empty-table">No pending expenses.</div>
+  {% endif %}
+{% endblock %}

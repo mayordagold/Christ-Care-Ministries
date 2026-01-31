@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Service History - Church Tracker{% endblock %}
+
+{% block content %}
+  <h2>Service History</h2>
+  <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
+
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <input type="date" name="date" class="form-control" value="{{ request.args.get('date', '') }}" placeholder="Date">
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="service_type" class="form-control" value="{{ request.args.get('service_type', '') }}" placeholder="Service Type">
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="{{ url_for('dashboard.service_history') }}" class="btn btn-outline-secondary ms-2">Reset</a>
+    </div>
+  </form>
+
+  {% if history %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover table-sm align-middle shadow-sm">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Service Type</th>
+            <th>Attendance</th>
+            <th>Total Giving</th>
+            <th>Approved Expenses</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in history %}
+          <tr>
+            <td>{{ h.date }}</td>
+            <td>{{ h.service_type }}</td>
+            <td>{{ h.attendance }}</td>
+            <td>{{ '{:,.2f}'.format(h.giving) }}</td>
+            <td>{{ '{:,.2f}'.format(h.expenses) }}</td>
+            <td><strong>{{ '{:,.2f}'.format(h.balance) }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-table">No service history found for the selected filter.</div>
+  {% endif %}
+{% endblock %}

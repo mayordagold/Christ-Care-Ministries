@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Giving - Christ Care Ministries{% endblock %}
+
+{% block content %}
+  <h2>Tithe & Offering Entry</h2>
+  <p>Welcome {{ current_user.name }} ({{ current_user.role }})</p>
+  <a href="{{ url_for('dashboard.view_dashboard') }}">Back to Dashboard</a>
+
+  {% if message %}
+      <p style="color:green;">{{ message }}</p>
+  {% endif %}
+
+  <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.date.label.text }}</label>
+        {{ form.date(class_='form-control', type='date') }}
+        {{ render_errors(form.date) }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.service_type.label.text }}</label>
+        {{ form.service_type(class_='form-control') }}
+        {{ render_errors(form.service_type) }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.tithe.label.text }}</label>
+        {{ form.tithe(class_='form-control', type='number', step='0.01') }}
+        {{ render_errors(form.tithe) }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.offering.label.text }}</label>
+        {{ form.offering(class_='form-control', type='number', step='0.01') }}
+        {{ render_errors(form.offering) }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ form.special.label.text }}</label>
+        {{ form.special(class_='form-control', type='number', step='0.01') }}
+        {{ render_errors(form.special) }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Giving</button>
+  </form>
+
+      <hr>
+      <h4>Recent Giving</h4>
+      {% if recent_giving %}
+        <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover align-middle shadow-sm giving-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Service</th>
+              <th>Tithe</th>
+              <th>Offering</th>
+              <th>Special</th>
+              <th>Entered By</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in recent_giving %}
+            <tr>
+              <td>{{ g['date'] }}</td>
+              <td>{{ g['service_type'] }}</td>
+              <td>{{ '{:,.2f}'.format(g['tithe'] or 0) }}</td>
+              <td>{{ '{:,.2f}'.format(g['offering'] or 0) }}</td>
+              <td>{{ '{:,.2f}'.format(g['special'] or 0) }}</td>
+              <td>{{ g['entered_by'] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      {% else %}
+        <div class="empty-table">No recent giving entries.</div>
+      {% endif %}
+{% endblock %}

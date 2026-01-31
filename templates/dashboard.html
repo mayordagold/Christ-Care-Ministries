@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Church Tracker{% endblock %}
+
+{% block content %}
+  <h2>Welcome {{ current_user.name }}!</h2>
+                <div class="col-12 col-md-4">
+
+    <hr>
+    <div class="row">
+        {% if current_user.role == 'admin' %}
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">User Management</h5>
+                            <p class="card-text">Add, edit, or remove users and assign roles.</p>
+                            <form action="{{ url_for('dashboard.users_list') }}" method="get" class="mt-auto">
+                                <button type="submit" class="btn btn-primary w-100">Manage Users</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Clear Data</h5>
+                            <p class="card-text">Delete selected data types below.</p>
+                            <form action="{{ url_for('admin.clear_data') }}" method="post" class="mt-auto">
+                                {{ form.csrf_token }}
+                                <div class="form-check mb-2">
+                                    {{ form.delete_attendance(class_='form-check-input', id='delete_attendance') }}
+                                    <label class="form-check-label" for="delete_attendance">Attendance</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    {{ form.delete_giving(class_='form-check-input', id='delete_giving') }}
+                                    <label class="form-check-label" for="delete_giving">Giving</label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    {{ form.delete_expenses(class_='form-check-input', id='delete_expenses') }}
+                                    <label class="form-check-label" for="delete_expenses">Expenses</label>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="filter_date" class="form-label">Date (optional, YYYY-MM-DD)</label>
+                                    {{ form.filter_date(class_='form-control', id='filter_date', placeholder='e.g. 2024-01-01') }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="filter_service_type" class="form-label">Service Type (optional)</label>
+                                    {{ form.filter_service_type(class_='form-control', id='filter_service_type', placeholder='e.g. Sunday, Midweek') }}
+                                </div>
+                                <button type="button" class="btn btn-danger w-100" style="background-color: #dc3545; border-color: #dc3545; color: #fff;" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete Selected Data</button>
+
+                                                                <!-- Confirmation Modal -->
+                                                                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header bg-danger text-white">
+                                                                                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <strong>Are you sure you want to delete the selected data?</strong>
+                                                                                <p>This action cannot be undone.</p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif current_user.role == 'usher' %}
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-attendance dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Attendance</h5>
+                            <p class="card-text">Enter attendance quickly for the selected service.</p>
+                            <p class="small text-muted">Last: {{ metrics.last_attendance_total if metrics and metrics.get('last_attendance_total') is not none else 0 }} attendees{% if metrics and metrics.get('last_attendance_date') %} ({{ metrics.last_attendance_date }}){% endif %}</p>
+                            <form action="{{ url_for('dashboard.attendance') }}" method="get" class="mb-2">
+                                <button type="submit" class="btn btn-primary text-white w-100">Enter Attendance</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Attendance Summary</h5>
+                            <p class="card-text">Quick view of the most recent attendance.</p>
+                            <p class="small text-muted">Last: {{ metrics.get('last_attendance_total', 0) }} attendees{% if metrics.get('last_attendance_date') %} ({{ metrics.get('last_attendance_date') }}){% endif %}</p>
+                            <form action="{{ url_for('dashboard.reports') }}" method="get" class="mt-auto">
+                                <button type="submit" class="btn btn-primary w-100">View Reports</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif current_user.role == 'finance' %}
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-giving dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Tithe & Offering</h5>
+                            <p class="card-text">Record tithe, offering and special contributions.</p>
+                            <p class="small text-muted">Last total: ₦{{ '{:,.2f}'.format(metrics.get('last_giving_total')) if metrics and metrics.get('last_giving_total') is not none else '0.00' }}{% if metrics and metrics.get('last_giving_date') %} ({{ metrics.last_giving_date }}){% endif %}</p>
+                            <form action="{{ url_for('dashboard.giving') }}" method="get" class="mb-2">
+                                <button type="submit" class="btn btn-primary w-100">Enter Giving</button>
+                            </form>
+                            <form action="{{ url_for('expenses.add_expense') }}" method="get">
+                                <button type="submit" class="btn btn-accent w-100">Add Expense</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Reports</h5>
+                            <p class="card-text">View attendance, giving and expense summaries.</p>
+                            <p class="small text-muted">Approved expenses total: ₦{{ '{:,.2f}'.format(metrics.get('approved_expenses_total', 0.0)) }}</p>
+                            <form action="{{ url_for('dashboard.reports') }}" method="get" class="mt-auto">
+                                <button type="submit" class="btn btn-primary w-100">View Reports</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif current_user.role == 'pastor' %}
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Attendance Summary</h5>
+                            <p class="card-text">Quick view of the most recent attendance.</p>
+                            <p class="small text-muted">Last: {{ metrics.get('last_attendance_total', 0) }} attendees{% if metrics.get('last_attendance_date') %} ({{ metrics.get('last_attendance_date') }}){% endif %}</p>
+                            <form action="{{ url_for('dashboard.reports') }}" method="get" class="mt-auto">
+                                <button type="submit" class="btn btn-primary w-100">View Reports</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-reports dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Reports</h5>
+                            <p class="card-text">View attendance, giving and expense summaries.</p>
+                            <p class="small text-muted">Approved expenses total: ₦{{ '{:,.2f}'.format(metrics.get('approved_expenses_total', 0.0)) }}</p>
+                            <form action="{{ url_for('dashboard.reports') }}" method="get" class="mt-auto">
+                                <button type="submit" class="btn btn-primary w-100">View Reports</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 card-expenses dashboard-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Approve Expenses</h5>
+                            <p class="card-text">Review and approve pending expenses.</p>
+                                <form action="{{ url_for('expenses.approve_expenses') }}" method="get" class="mt-auto">
+                                    <button type="submit" class="btn btn-approve-blue w-100">
+                                        Approve Expenses
+                                        {% if metrics.get('pending_expenses', 0) > 0 %}
+                                            <span class="badge bg-danger ms-2">{{ metrics.get('pending_expenses') }}</span>
+                                        {% endif %}
+                                    </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if metrics.get('pending_expenses', 0) > 0 %}
+                    <div class="alert alert-warning mb-3">
+                        <strong>Pending Approval:</strong> You have {{ metrics.get('pending_expenses') }} expense(s) awaiting approval.
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+        <hr>
+        {% if recent_attendance and current_user.role in ['pastor','usher'] %}
+            <h4>Recent Attendance</h4>
+            <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr><th>Date</th><th>Service</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                    {% for a in recent_attendance %}
+                    <tr>
+                        <td>{{ a['date'] }}</td>
+                        <td>{{ a['service_type'] }}</td>
+                        <td>{{ a['total'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+
+        {% if recent_giving and current_user.role in ['pastor','finance'] %}
+            <h4>Recent Giving</h4>
+            <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr><th>Date</th><th>Service</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                    {% for g in recent_giving %}
+                    <tr>
+                        <td>{{ g['date'] }}</td>
+                        <td>{{ g['service_type'] }}</td>
+                        <td>{{ '{:,.2f}'.format((g['tithe'] or 0) + (g['offering'] or 0) + (g['special'] or 0)) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+
+        {% if recent_expenses and current_user.role in ['pastor','finance'] %}
+            <h4>Recent Expenses</h4>
+            <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr><th>Date</th><th>Service</th><th>Category</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    {% for e in recent_expenses %}
+                    <tr>
+                        <td>{{ e['date'] }}</td>
+                        <td>{{ e['service_type'] }}</td>
+                        <td>{{ e['category'] }}</td>
+                        <td>₦{{ '{:,.2f}'.format(e['amount'] or 0) }}</td>
+                        <td>
+                            {% if e['approved'] %}
+                                <span class="badge bg-success">Approved</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+{% endblock %}

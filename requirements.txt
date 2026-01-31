@@ -1,0 +1,8 @@
+flask
+flask-wtf
+flask-login
+wtforms
+pandas
+openpyxl
+
+email-validator

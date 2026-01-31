@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if user else 'Add' }} User - Christ Care Ministries{% endblock %}
+{% block content %}
+<h2>{{ 'Edit' if user else 'Add' }} User</h2>
+<a href="{{ url_for('dashboard.users_list') }}" class="btn btn-secondary mb-3">Back to User List</a>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        {{ form.name(class_='form-control') }}
+        {{ render_errors(form.name) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        {{ form.email(class_='form-control') }}
+        {{ render_errors(form.email) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Role</label>
+        {{ form.role(class_='form-select') }}
+        {{ render_errors(form.role) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password{% if user %} (leave blank to keep){% endif %}</label>
+        {{ form.password(class_='form-control') }}
+        {{ render_errors(form.password) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Status</label>
+        {{ form.active(class_='form-select') }}
+        {{ render_errors(form.active) }}
+    </div>
+    <button type="submit" class="btn btn-primary">{{ 'Update' if user else 'Add' }} User</button>
+</form>
+{% endblock %}

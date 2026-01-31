@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Expenses - Christ Care Ministries{% endblock %}
+
+{% block content %}
+  <h2>Approve Expenses</h2>
+  <p>Welcome {{ current_user.name }} ({{ current_user.role }})</p>
+  <a href="{{ url_for('dashboard.view_dashboard') }}">Back to Dashboard</a>
+
+  {% if message %}
+      <p style="color:green;">{{ message }}</p>
+  {% endif %}
+
+  {% if expenses %}
+    <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover table-sm align-middle shadow-sm expenses-table">
+          <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Service Type</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Description</th>
+              <th>Paid By</th>
+              <th>Action</th>
+          </tr>
+          {% for e in expenses %}
+          <tr>
+              <td>{{ e[0] }}</td>
+              <td>{{ e[1] }}</td>
+              <td>{{ e[2] }}</td>
+              <td>{{ e[3] }}</td>
+              <td>{{ e[4] }}</td>
+              <td>{{ e[5] }}</td>
+              <td>{{ e[6] }}</td>
+              <td>{{ e[7] }}</td>
+              <td>
+                                        <form method="POST" style="margin:0;">
+                                            {{ form.csrf_token }}
+                                            <input type="hidden" name="expense_id" value="{{ e[0] }}">
+                                            <button type="submit" class="btn btn-sm btn-approve-blue">Approve</button>
+                                    </form>
+              </td>
+          </tr>
+          {% endfor %}
+      </table>
+      </div>
+  {% else %}
+      <div class="empty-table">No pending expenses.</div>
+  {% endif %}
+{% endblock %}

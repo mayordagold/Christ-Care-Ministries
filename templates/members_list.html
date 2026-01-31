@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Members - Church Tracker{% endblock %}
+
+{% block content %}
+  <h2>Members</h2>
+  <a href="{{ url_for('dashboard.members_new') }}" class="btn btn-primary mb-3">Add Member</a>
+  <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+
+  {% if members %}
+    <div class="table-responsive">
+    <table class="table table-striped table-hover table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Joined</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in members %}
+        <tr>
+          <td>{{ m[1] }}</td>
+          <td>{{ m[2] }}</td>
+          <td>{{ m[3] }}</td>
+          <td>{{ m[4] }}</td>
+          <td>{{ 'Active' if m[5]==1 else 'Inactive' }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('dashboard.members_toggle', member_id=m[0]) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <button type="submit" class="btn btn-sm {{ 'btn-warning' if m[5]==1 else 'btn-success' }}">
+                {{ 'Deactivate' if m[5]==1 else 'Activate' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  {% else %}
+    <div class="empty-table">No members yet.</div>
+  {% endif %}
+{% endblock %}

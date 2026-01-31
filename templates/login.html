@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Christ Care Ministries{% endblock %}
+
+{% block content %}
+  <div class="login-hero">
+    <div class="login-card">
+      <div class="text-center mb-3">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Christ Care Ministries" class="login-logo mb-2">
+        <h2>Login</h2>
+      </div>
+      <form method="POST">
+          {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        <label for="email" class="form-label">{{ form.email.label.text }}</label>
+        {{ form.email(class_='form-control') }}
+        {{ render_errors(form.email) }}
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">{{ form.password.label.text }}</label>
+        {{ form.password(class_='form-control') }}
+        {{ render_errors(form.password) }}
+      </div>
+
+      <div>
+        {{ form.submit(class_='btn btn-primary') }}
+      </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

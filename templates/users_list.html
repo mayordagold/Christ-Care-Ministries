@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}User Management - Christ Care Ministries{% endblock %}
+{% block content %}
+<h2>User Management</h2>
+<form method="get" action="{{ url_for('dashboard.users_new') }}" style="display:inline;">
+  <button type="submit" class="btn btn-primary mb-3" style="min-width:120px;">
+    <i class="bi bi-person-plus"></i> Add User
+  </button>
+</form>
+<a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+
+{% if users %}
+  <div class="table-responsive">
+  <table class="table table-striped table-hover table-sm align-middle">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u['name'] }}</td>
+        <td>{{ u['email'] }}</td>
+        <td>{{ u['role'] }}</td>
+        <td>{{ 'Active' if u['active']==1 else 'Inactive' }}</td>
+        <td>
+          <form method="GET" action="{{ url_for('dashboard.users_edit', user_id=u['id']) }}" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-primary me-1" title="Edit">
+              <i class="bi bi-pencil-square"></i> Edit
+            </button>
+          </form>
+          <form method="POST" action="{{ url_for('dashboard.users_delete', user_id=u['id']) }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="btn btn-sm btn-delete" title="Delete" onclick="return confirm('Delete this user?');">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </form>
+        {% block head %}
+        {{ super() }}
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        {% endblock %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% else %}
+  <div class="empty-table">No users found.</div>
+{% endif %}
+{% endblock %}

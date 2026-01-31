@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Expense - Church Tracker{% endblock %}
+
+{% block content %}
+  <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
+  <h2>Add New Expense</h2>
+  <p>Fill out the form below to submit a new expense for approval.</p>
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.date.label(class="form-label") }}
+      {{ form.date(class="form-control", type="date") }}
+      {{ render_errors(form.date) }}
+    </div>
+    <div class="mb-3">
+      {{ form.service_type.label(class="form-label") }}
+      {{ form.service_type(class="form-control", placeholder="e.g. Sunday Service") }}
+      {{ render_errors(form.service_type) }}
+    </div>
+    <div class="mb-3">
+      {{ form.category.label(class="form-label") }}
+      {{ form.category(class="form-control", placeholder="e.g. Utilities, Supplies") }}
+      {{ render_errors(form.category) }}
+    </div>
+    <div class="mb-3">
+      {{ form.amount.label(class="form-label") }}
+      {{ form.amount(class="form-control", step="0.01", min="0") }}
+      {{ render_errors(form.amount) }}
+    </div>
+    <div class="mb-3">
+      {{ form.payment_method.label(class="form-label") }}
+      {{ form.payment_method(class="form-select") }}
+      {{ render_errors(form.payment_method) }}
+    </div>
+    <div class="mb-3">
+      {{ form.description.label(class="form-label") }}
+      {{ form.description(class="form-control", rows=2) }}
+      {{ render_errors(form.description) }}
+    </div>
+    <button type="submit" class="btn btn-primary">Add Expense</button>
+    <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+{% endblock %}

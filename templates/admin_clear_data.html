@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Clear Data{% endblock %}
+{% block content %}
+<h2>Admin: Clear All Data</h2>
+<div class="alert alert-warning">
+    <strong>Warning:</strong> This will permanently delete all attendance, giving, and expenses data. This action cannot be undone.
+</div>
+<form method="post">
+    <button type="submit" class="btn btn-danger">Clear All Data</button>
+    <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

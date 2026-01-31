@@ -4,5 +4,6 @@ flask-login
 wtforms
 pandas
 openpyxl
+psycopg2-binary
 
 email-validator
